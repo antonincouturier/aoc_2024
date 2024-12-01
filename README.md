@@ -10,3 +10,9 @@ Run given day solutions
 ```
 cargo run 1
 ```
+
+Run benchmark
+```
+cargo bench 
+```
+(And visualize results in `target/criterion/report/index.html`)
