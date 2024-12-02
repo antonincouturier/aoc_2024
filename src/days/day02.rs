@@ -13,29 +13,31 @@ pub fn read_input(path: &str) -> Vec<Vec<i32>> {
     let content = fs::read_to_string(Path::new(path))
         .unwrap_or_else(|_| panic!("Failed to read input file: {}", path));
 
-    let data: Vec<Vec<i32>> = content
+    content
         .lines()
         .map(|line| {
             line.split_whitespace()
                 .filter_map(|num| num.parse::<i32>().ok())
-                .collect()
+                .collect::<Vec<i32>>()
         })
-        .collect();
-    data
+        .collect()
 }
 
 fn is_difference_safe(difference: &i32) -> bool {
     if *difference == 0 {
         return false; 
     }
-    let abs_difference = difference.abs();
-    if (abs_difference > 0) && (abs_difference < 4) {
+    const SAFE_THRESHOLD: i32 = 4;
+    if difference.abs() < SAFE_THRESHOLD {
         return true;
     }
     false
 }
 
 fn is_report_safe(report: &Vec<i32>) -> bool {
+    if report.len() < 2 {
+        return false;
+    }
     let first = report[0];
     let mut previous_elem = report[1];
     let mut difference = previous_elem - first;
@@ -73,12 +75,7 @@ pub fn count_safe_reports_dampener(reports: &Vec<Vec<i32>>) -> i32 {
             count += 1;
         } else {
             for i in 0..report.len() {
-                let report_without_i: Vec<i32> = report
-                    .iter()
-                    .enumerate()
-                    .filter(|&(index, _)| index != i)
-                    .map(|(_, &value)| value)
-                    .collect();
+                let report_without_i = [&report[..i], &report[i + 1..]].concat();
                 if is_report_safe(&report_without_i) {
                     count += 1;
                     break;
