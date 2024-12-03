@@ -10,5 +10,5 @@ regex = "1.11"
 criterion = "0.5"
 
 [[bench]]
-name = "benchmark_day2"
+name = "benchmark_day3"
 harness = false
