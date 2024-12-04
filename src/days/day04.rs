@@ -91,8 +91,6 @@ pub fn count_all_xmas(puzzle: &Vec<Vec<char>>) -> usize {
         })
         .sum();
 
-    println!("Horizontal: {}, Vertical: {}, Diagonal tl: {}, Diagonal tr: {}", horizontal_count, vertical_count, diagonal_tl_count, diagonal_tr_count);
-
     horizontal_count + vertical_count + diagonal_tr_count + diagonal_tl_count
 }
 
