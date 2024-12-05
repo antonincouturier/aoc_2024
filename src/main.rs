@@ -19,6 +19,7 @@ fn main() {
         2 => days::day02::run(),
         3 => days::day03::run(),
         4 => days::day04::run(),
+        5 => days::day05::run(),
         _ => {
             eprintln!("Day {} is not implemented", day);
             std::process::exit(1);
