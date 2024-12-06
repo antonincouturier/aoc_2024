@@ -41,26 +41,14 @@ fn is_report_safe(report: &Vec<i32>) -> bool {
     if report.len() < 2 {
         return false;
     }
-    let first = report[0];
-    let mut previous_elem = report[1];
-    let mut difference = previous_elem - first;
 
-    if ! is_difference_safe(&difference) {
-        return false; 
-    }
-    let is_increasing: bool = difference > 0;
-
-    for &elem in &report[2..] {
-        difference = elem - previous_elem;
-        if is_increasing != (difference > 0) {
-            return false;
-        }
-        if ! is_difference_safe(&difference) {
-            return false; 
-        }
-        previous_elem = elem;
-    }
-    true
+    let mut diffs = report.windows(2).map(|pair| pair[1] - pair[0]);
+    let first_diff = match diffs.next() {
+        Some(d) if is_difference_safe(&d) => d,
+        _ => return false,
+    };
+    let is_increasing = first_diff > 0;
+    diffs.all(|diff| is_difference_safe(&diff) && ((diff > 0) == is_increasing))
 }
 
 pub fn count_safe_reports(reports: &Vec<Vec<i32>>) -> i32 {
@@ -78,7 +66,8 @@ pub fn count_safe_reports_dampener(reports: &Vec<Vec<i32>>) -> i32 {
             count += 1;
         } else {
             for i in 0..report.len() {
-                let report_without_i = [&report[..i], &report[i + 1..]].concat();
+                let mut report_without_i = report.clone();
+                report_without_i.remove(i);
                 if is_report_safe(&report_without_i) {
                     count += 1;
                     break;
