@@ -59,14 +59,17 @@ pub fn count_all_xmas(puzzle: &Vec<Vec<char>>) -> usize {
     // Diagonals top left 
     let diagonal_tl_count: usize = (3..(n_rows + n_cols - 1)) // at least 4 characters
         .filter_map(|start| {
-            let mut diagonal = String::new();
-            for i in 0..=start {
-                let x = i;
-                let y = start - i;
-                if x < n_rows && y < n_cols {
-                    diagonal.push(puzzle[x][y]);
-                }
-            }
+            let diagonal: String = (0..=start) 
+                .filter_map(|i| {
+                    let x = i;
+                    let y = start - i;
+                    if x < n_rows && y < n_cols {
+                        Some(puzzle[x][y])
+                    } else {
+                        None
+                    }
+                })
+                .collect();
             if diagonal.len() >= 4 {
                 Some(count_xmas_samx(&diagonal))
             } else {
@@ -78,14 +81,17 @@ pub fn count_all_xmas(puzzle: &Vec<Vec<char>>) -> usize {
     // Diagonals top right
     let diagonal_tr_count: usize = (3..(n_rows + n_cols - 1)) // at least 4 characters
         .filter_map(|start| {
-            let mut diagonal = String::new();
-            for i in max(0, start as isize - (n_cols as isize - 1)) as usize..=min(start, n_rows - 1) {
-                let x = i;
-                let y = n_cols - 1 - (start - i);
-                if x < n_rows && y < n_cols {
-                    diagonal.push(puzzle[x][y]);
-                }
-            }
+            let diagonal: String = (max(0, start as isize - (n_cols as isize - 1)) as usize..=min(start, n_rows - 1)) 
+                .filter_map(|i| {
+                    let x = i;
+                    let y = n_cols - 1 - (start - i);
+                    if x < n_rows && y < n_cols {
+                        Some(puzzle[x][y])
+                    } else {
+                        None
+                    }
+                })
+                .collect();
             if diagonal.len() >= 4 {
                 Some(count_xmas_samx(&diagonal))
             } else {
