@@ -1,7 +1,6 @@
 use std::fs; use std::path::Path;
 use std::collections::HashSet;
 use std::error::Error;
-use kdam::tqdm;
 use rayon::prelude::*;
 
 pub fn run() {
@@ -157,30 +156,6 @@ fn guard_patrol_loop_found(start: &Position, map: &Map) -> bool {
     }
 }
 
-pub fn find_all_loops(start: &Position, map: &Map) -> usize {
-    let mut count = 0;
-    for i in tqdm!(0..map.max_i) {
-        for j in 0..map.max_j {
-            if map.obstacles.contains(&(i, j)) || (start.i == i && start.j == j) {
-                continue;
-            }
-            let mut new_obstacles = map.obstacles.clone();
-            new_obstacles.insert((i, j));
-
-            let new_map = Map { 
-                max_i: map.max_i, 
-                max_j: map.max_j, 
-                obstacles: new_obstacles 
-            };
-
-            if guard_patrol_loop_found(start, &new_map) {
-                count += 1;
-            }
-        }
-    }
-    count
-}
-
 pub fn find_all_loops_parallel(start: &Position, map: &Map) -> usize {
     let all_positions: Vec<(usize, usize)> = (0..map.max_i)
         .flat_map(|i| (0..map.max_j).map(move |j| (i, j)))
@@ -326,7 +301,7 @@ mod tests {
             direction: Direction::North,
         };
 
-        let loop_count = find_all_loops(&initial_position, &map);
+        let loop_count = find_all_loops_parallel(&initial_position, &map);
         assert_eq!(loop_count, 6, "Expected 6 loops, found {}", loop_count);
     }
 }
