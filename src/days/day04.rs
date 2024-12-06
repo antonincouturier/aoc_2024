@@ -2,20 +2,22 @@ use std::fs;
 use std::path::Path;
 use regex::Regex;
 use std::cmp::{min, max};
+use std::error::Error;
 
 pub fn run() {
-    let puzzle = read_input("data/day04.txt");
+    let puzzle = read_input("data/day04.txt").expect("Failed to read and parse the input file");
     let result_1 = count_all_xmas(&puzzle);
     let result_2 = count_all_x_mas(&puzzle);
     println!("Day 04 - part 1: {}", result_1);
     println!("Day 04 - part 2: {}", result_2); 
 }
 
-pub fn read_input(path: &str) -> Vec<Vec<char>> {
+pub fn read_input(path: &str) -> Result<Vec<Vec<char>>, Box<dyn Error>> {
     let content = fs::read_to_string(Path::new(path))
-        .unwrap_or_else(|_| panic!("Failed to read input file: {}", path));
+        .map_err(|e| format!("Failed to read input file '{}': {}", path, e))?;
 
-    content
+    Ok(
+        content
         .lines()
         .map(|line| {
             line
@@ -24,6 +26,7 @@ pub fn read_input(path: &str) -> Vec<Vec<char>> {
             
         })
         .collect()
+    )
 }
 
 fn count_xmas_samx(input: &str) -> usize {

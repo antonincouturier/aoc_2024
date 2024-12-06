@@ -1,18 +1,19 @@
 use std::fs;
 use std::path::Path;
 use std::collections::HashMap;
+use std::error::Error;
 
 pub fn run() {
-    let (first, second) = read_input("data/day01.txt") ;
+    let (first, second) = read_input("data/day01.txt").expect("Failed to read and parse the input file");
     let result_1 = sorted_difference(&first, &second);
     let result_2 = similarity_score(&first, &second);
     println!("Day 01 - part 1: {}", result_1);
     println!("Day 01 - part 2: {}", result_2);
 }
 
-pub fn read_input(path: &str) -> (Vec<i32>, Vec<i32>) {
+pub fn read_input(path: &str) -> Result<(Vec<i32>, Vec<i32>), Box<dyn Error>> {
     let content = fs::read_to_string(Path::new(path))
-        .unwrap_or_else(|_| panic!("Failed to read input file: {}", path));
+        .map_err(|e| format!("Failed to read input file {}: {}", path, e))?;
 
     let pairs: Vec<(i32, i32)> = content
         .lines()
@@ -33,7 +34,7 @@ pub fn read_input(path: &str) -> (Vec<i32>, Vec<i32>) {
     let list1: Vec<i32> = pairs.iter().map(|(a, _)| *a).collect();
     let list2: Vec<i32> = pairs.iter().map(|(_, b)| *b).collect();
 
-    (list1, list2)
+    Ok((list1, list2))
 }
 
 pub fn sorted_difference(first: &Vec<i32>, second: &Vec<i32>) -> i32 {

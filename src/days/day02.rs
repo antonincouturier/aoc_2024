@@ -1,19 +1,21 @@
 use std::fs;
 use std::path::Path;
+use std::error::Error;
 
 pub fn run() {
-    let reports = read_input("data/day02.txt");
+    let reports = read_input("data/day02.txt").expect("Failed to read and parse the input file");
     let result_1 = count_safe_reports(&reports);
     let result_2 = count_safe_reports_dampener(&reports);
     println!("Day 02 - part 1: {}", result_1);
     println!("Day 02 - part 2: {}", result_2); 
 }
 
-pub fn read_input(path: &str) -> Vec<Vec<i32>> {
+pub fn read_input(path: &str) -> Result<Vec<Vec<i32>>, Box<dyn Error>> {
     let content = fs::read_to_string(Path::new(path))
-        .unwrap_or_else(|_| panic!("Failed to read input file: {}", path));
+        .map_err(|e| format!("Failed to read input file '{}': {}", path, e))?;
 
-    content
+    Ok(
+        content
         .lines()
         .map(|line| {
             line.split_whitespace()
@@ -21,6 +23,7 @@ pub fn read_input(path: &str) -> Vec<Vec<i32>> {
                 .collect::<Vec<i32>>()
         })
         .collect()
+    )
 }
 
 fn is_difference_safe(difference: &i32) -> bool {

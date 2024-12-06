@@ -1,25 +1,28 @@
 use std::fs;
 use std::path::Path;
 use regex::Regex;
+use std::error::Error;
 
 pub fn run() {
-    let corrupted_memory = read_input("data/day03.txt");
+    let corrupted_memory = read_input("data/day03.txt").expect("Failed to read and parse the input file");
     let result_1 = compute_multiplications(&corrupted_memory);
     let result_2 = compute_enabled_multiplications(&corrupted_memory);
     println!("Day 03 - part 1: {}", result_1);
     println!("Day 03 - part 2: {}", result_2); 
 }
 
-pub fn read_input(path: &str) -> Vec<String> {
+pub fn read_input(path: &str) -> Result<Vec<String>, Box<dyn Error>> {
     let content = fs::read_to_string(Path::new(path))
-        .unwrap_or_else(|_| panic!("Failed to read input file: {}", path));
+        .map_err(|e| format!("Failed to read input file '{}': {}", path, e))?;
 
-    content
+    Ok(
+        content
         .lines()
         .map(|line| {
             line.to_string()
         })
         .collect()
+    )
 }
 
 fn find_valid_mul(input: &str) -> Vec<(i32, i32)> {

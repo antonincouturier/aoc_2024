@@ -2,9 +2,10 @@ use std::fs;
 use std::path::Path;
 use std::collections::{HashSet, HashMap, VecDeque};
 use regex::Regex;
+use std::error::Error;
 
 pub fn run() {
-    let (rules, updates) = read_input("data/day05.txt");
+    let (rules, updates) = read_input("data/day05.txt").expect("Failed to read and parse the input file");
 
     let result_1 = middle_page_sum(&updates, &rules);
     let result_2 = reordered_middle_page_sum(&updates, &rules);
@@ -41,9 +42,9 @@ fn extract_pages(input: &str) -> Vec<Vec<u32>> {
         .collect::<Vec<Vec<u32>>>()
 }
 
-pub fn read_input(path: &str) -> (HashMap<u32, Vec<u32>>, Vec<Vec<u32>>) {
+pub fn read_input(path: &str) -> Result<(HashMap<u32, Vec<u32>>, Vec<Vec<u32>>), Box<dyn Error>> {
     let content = fs::read_to_string(Path::new(path))
-        .unwrap_or_else(|_| panic!("Failed to read input file: {}", path));
+        .map_err(|e| format!("Failed to read input file '{}': {}", path, e))?;
 
     let blocks = content
         .split("\n\n")
@@ -51,12 +52,13 @@ pub fn read_input(path: &str) -> (HashMap<u32, Vec<u32>>, Vec<Vec<u32>>) {
         .filter(|block| !block.is_empty())
         .collect::<Vec<String>>();
     
-    assert!(blocks.len() == 2);
-
+    if blocks.len() != 2 {
+        return Err(format!("Expected 2 blocks of input, found {}", blocks.len()).into());
+    }
     let rules = extract_rules(&blocks[0]);
     let pages = extract_pages(&blocks[1]);
 
-    (rules, pages)
+    Ok((rules, pages))
 }
 
 fn check_update(update: &Vec<u32>, rules: &HashMap<u32, Vec<u32>>) -> bool {
