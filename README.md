@@ -15,4 +15,10 @@ Run benchmark
 ```
 cargo bench 
 ```
+
+Run specific benchmark 
+```
+cargo bench --bench benchmark_day5
+```
+
 (And visualize results in `target/criterion/report/index.html`)

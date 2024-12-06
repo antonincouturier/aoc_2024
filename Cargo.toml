@@ -11,5 +11,25 @@ rayon = "1.10"
 criterion = "0.5"
 
 [[bench]]
+name = "benchmark_day1"
+harness = false
+
+[[bench]]
+name = "benchmark_day2"
+harness = false
+
+[[bench]]
+name = "benchmark_day3"
+harness = false
+
+[[bench]]
 name = "benchmark_day4"
+harness = false
+
+[[bench]]
+name = "benchmark_day5"
+harness = false
+
+[[bench]]
+name = "benchmark_day6"
 harness = false
