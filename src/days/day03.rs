@@ -36,7 +36,7 @@ fn find_valid_mul(input: &str) -> Vec<(i32, i32)> {
         .collect()
 }
 
-pub fn compute_multiplications(corrupted_memory: &Vec<String>) -> i32 {
+pub fn compute_multiplications(corrupted_memory: &[String]) -> i32 {
     corrupted_memory
         .iter()
         .flat_map(|input| { // Note: need to use flat_map instead of map
@@ -48,7 +48,7 @@ pub fn compute_multiplications(corrupted_memory: &Vec<String>) -> i32 {
         .sum()
 }
 
-pub fn compute_enabled_multiplications(corrupted_memory: &Vec<String>) -> i32 {
+pub fn compute_enabled_multiplications(corrupted_memory: &[String]) -> i32 {
     let re = Regex::new(r"do\(\)|don't\(\)|mul\((\d{1,3}),\s*(\d{1,3})\)").unwrap();
     let mut total = 0;
     let mut enabled = true;
@@ -86,7 +86,7 @@ mod tests {
 
     #[test]
     fn test_compute_multiplication() {
-        let input = vec!["xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))"].into_iter().map(String::from).collect();
+        let input = vec!["xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))"].into_iter().map(String::from).collect::<Vec<String>>();
         let expected = 161;
         let result = compute_multiplications(&input);
         assert_eq!(result, expected, "Failed compute multiplications, expected {:?} got {:?}", expected, result);
@@ -94,7 +94,7 @@ mod tests {
 
     #[test]
     fn test_compute_enabled_multiplications() {
-        let input = vec!["xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))"].into_iter().map(String::from).collect();
+        let input = vec!["xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))"].into_iter().map(String::from).collect::<Vec<String>>();
         let expected = 48;   
         let result = compute_enabled_multiplications(&input);
         assert_eq!(result, expected, "Failed find do block, expected {:?} got {:?}", expected, result);

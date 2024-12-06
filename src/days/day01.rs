@@ -37,9 +37,9 @@ pub fn read_input(path: &str) -> Result<(Vec<i32>, Vec<i32>), Box<dyn Error>> {
     Ok((list1, list2))
 }
 
-pub fn sorted_difference(first: &Vec<i32>, second: &Vec<i32>) -> i32 {
-    let mut first_sorted = first.clone();
-    let mut second_sorted = second.clone();
+pub fn sorted_difference(first: &[i32], second: &[i32]) -> i32 {
+    let mut first_sorted = first.to_vec();
+    let mut second_sorted = second.to_vec();
 
     first_sorted.sort();
     second_sorted.sort();
@@ -50,7 +50,7 @@ pub fn sorted_difference(first: &Vec<i32>, second: &Vec<i32>) -> i32 {
         .sum()
 }
 
-pub fn similarity_score(first: &Vec<i32>, second: &Vec<i32>) -> i32 {
+pub fn similarity_score(first: &[i32], second: &[i32]) -> i32 {
     let mut counter: HashMap<i32, i32> = HashMap::new();
     for &elem in second {
         let count = counter.entry(elem).or_insert(0);

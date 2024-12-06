@@ -37,7 +37,7 @@ fn is_difference_safe(difference: &i32) -> bool {
     false
 }
 
-fn is_report_safe(report: &Vec<i32>) -> bool {
+fn is_report_safe(report: &[i32]) -> bool {
     if report.len() < 2 {
         return false;
     }
@@ -51,7 +51,7 @@ fn is_report_safe(report: &Vec<i32>) -> bool {
     diffs.all(|diff| is_difference_safe(&diff) && ((diff > 0) == is_increasing))
 }
 
-pub fn count_safe_reports(reports: &Vec<Vec<i32>>) -> i32 {
+pub fn count_safe_reports(reports: &[Vec<i32>]) -> i32 {
     reports.iter()
         .filter(|report| is_report_safe(report))
         .count()
@@ -59,7 +59,7 @@ pub fn count_safe_reports(reports: &Vec<Vec<i32>>) -> i32 {
         .unwrap()
 }
 
-pub fn count_safe_reports_dampener(reports: &Vec<Vec<i32>>) -> i32 {
+pub fn count_safe_reports_dampener(reports: &[Vec<i32>]) -> i32 {
     let mut count = 0;
     for report in reports {
         if is_report_safe(&report) {

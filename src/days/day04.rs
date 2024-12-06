@@ -35,7 +35,7 @@ fn count_xmas_samx(input: &str) -> usize {
     re.find_iter(input).count() + re.find_iter(&reverse_input).count()
 }
 
-pub fn count_all_xmas(puzzle: &Vec<Vec<char>>) -> usize {
+pub fn count_all_xmas(puzzle: &[Vec<char>]) -> usize {
     let n_rows = puzzle.len();
     let n_cols = puzzle[0].len();
 
@@ -103,7 +103,7 @@ pub fn count_all_xmas(puzzle: &Vec<Vec<char>>) -> usize {
     horizontal_count + vertical_count + diagonal_tr_count + diagonal_tl_count
 }
 
-pub fn count_all_x_mas(puzzle: &Vec<Vec<char>>) -> usize {
+pub fn count_all_x_mas(puzzle: &[Vec<char>]) -> usize {
     let n_rows = puzzle.len();
     let n_cols = puzzle[0].len();
     let mut count = 0;

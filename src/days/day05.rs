@@ -61,7 +61,7 @@ pub fn read_input(path: &str) -> Result<(HashMap<u32, Vec<u32>>, Vec<Vec<u32>>),
     Ok((rules, pages))
 }
 
-fn check_update(update: &Vec<u32>, rules: &HashMap<u32, Vec<u32>>) -> bool {
+fn check_update(update: &[u32], rules: &HashMap<u32, Vec<u32>>) -> bool {
     let mut current_set = HashSet::new();
     for &page in update.iter() {
         if let Some(rule) = rules.get(&page) {
@@ -76,7 +76,7 @@ fn check_update(update: &Vec<u32>, rules: &HashMap<u32, Vec<u32>>) -> bool {
     true
 }
 
-pub fn middle_page_sum(updates: &Vec<Vec<u32>>, rules: &HashMap<u32, Vec<u32>>) -> u32 {
+pub fn middle_page_sum(updates: &[Vec<u32>], rules: &HashMap<u32, Vec<u32>>) -> u32 {
     updates
         .iter()
         .filter(|update| check_update(update, rules))
@@ -87,7 +87,7 @@ pub fn middle_page_sum(updates: &Vec<Vec<u32>>, rules: &HashMap<u32, Vec<u32>>) 
         .sum()
 }
 
-fn reorder_update(update: &Vec<u32>, rules: &HashMap<u32, Vec<u32>>) -> Vec<u32> {
+fn reorder_update(update: &[u32], rules: &HashMap<u32, Vec<u32>>) -> Vec<u32> {
     let unique_pages: HashSet<u32> = update.iter().cloned().collect();
     let mut adjacency_map: HashMap<u32, Vec<u32>> = HashMap::new();
     let mut degree_count: HashMap<u32, usize> = HashMap::new();
@@ -142,7 +142,7 @@ fn reorder_update(update: &Vec<u32>, rules: &HashMap<u32, Vec<u32>>) -> Vec<u32>
     sorted
 }
 
-pub fn reordered_middle_page_sum(updates: &Vec<Vec<u32>>, rules: &HashMap<u32, Vec<u32>>) -> u32 {
+pub fn reordered_middle_page_sum(updates: &[Vec<u32>], rules: &HashMap<u32, Vec<u32>>) -> u32 {
     updates
         .iter()
         .filter(|update| !check_update(update, rules))
