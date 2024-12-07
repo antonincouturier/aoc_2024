@@ -184,4 +184,14 @@ mod tests {
             expected, result
         );
     }
+
+    #[test]
+    fn test_day04_part1_and_part2() {
+        let puzzle = read_input("data/day04.txt").expect("Failed to read test input");
+        let result_1 = count_all_xmas(&puzzle);
+        let result_2 = count_all_x_mas(&puzzle);
+
+        assert_eq!(result_1, 2569, "Day 04 - Part 1 failed"); 
+        assert_eq!(result_2, 1998, "Day 04 - Part 2 failed"); 
+    }
 }

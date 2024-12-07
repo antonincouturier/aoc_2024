@@ -134,4 +134,14 @@ mod tests {
             result, expected
         );
     }
+
+    #[test]
+    fn test_day02_part1_and_part2() {
+        let reports = read_input("data/day02.txt").expect("Failed to read test input");
+        let result_1 = count_safe_reports(&reports);
+        let result_2 = count_safe_reports_dampener(&reports);
+
+        assert_eq!(result_1, 306, "Day 02 - Part 1 failed"); 
+        assert_eq!(result_2, 366, "Day 02 - Part 2 failed"); 
+    }
 }

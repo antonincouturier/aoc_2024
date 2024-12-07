@@ -317,4 +317,17 @@ mod tests {
         let loop_count = find_all_loops_parallel(&initial_position, &map);
         assert_eq!(loop_count, 6, "Expected 6 loops, found {}", loop_count);
     }
+
+    /*  This one takes forever but check every so often to find regressions
+    #[test]
+    fn test_day06_part1_and_part2() {
+        let (initial_pos, map) =
+            read_input("data/day06.txt").expect("Failed to read test input");
+        let result_1 = guard_patrol_count(&initial_pos, &map);
+        let result_2 = find_all_loops_parallel(&initial_pos, &map);
+
+        assert_eq!(result_1, 5312, "Day 06 - Part 1 failed"); 
+        assert_eq!(result_2, 1748, "Day 06 - Part 2 failed");  
+    }
+    */
 }

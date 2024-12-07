@@ -169,4 +169,15 @@ mod tests {
             expected_sum, result
         );
     }
+
+    #[test]
+    fn test_day07_part1_and_part2() {
+        let calibration_data =
+            read_input("data/day07.txt").expect("Failed to read test input");
+        let result_1 = total_calibration(&calibration_data);
+        let result_2 = total_calibration_concat(&calibration_data);
+
+        assert_eq!(result_1, 1399219271639, "Day 07 - Part 1 failed"); 
+        assert_eq!(result_2, 275791737999003, "Day 07 - Part 2 failed"); 
+    }
 }

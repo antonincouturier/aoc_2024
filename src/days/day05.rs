@@ -271,4 +271,15 @@ mod tests {
             expected_result, result
         );
     }
+
+    #[test]
+    fn test_day05_part1_and_part2() {
+        let (rules, updates) =
+            read_input("data/day05.txt").expect("Failed to read test input");
+        let result_1 = middle_page_sum(&updates, &rules);
+        let result_2 = reordered_middle_page_sum(&updates, &rules);
+
+        assert_eq!(result_1, 5248, "Day 05 - Part 1 failed"); 
+        assert_eq!(result_2, 4507, "Day 05 - Part 2 failed"); 
+    }
 }

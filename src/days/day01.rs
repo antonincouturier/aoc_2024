@@ -84,4 +84,14 @@ mod tests {
         let result = similarity_score(&list1, &list2);
         assert_eq!(result, expected, "Failed similarity score")
     }
+
+    #[test]
+    fn test_day01_part1_and_part2() {
+        let (first, second) = read_input("data/day01.txt").expect("Failed to read test input");
+        let result_1 = sorted_difference(&first, &second);
+        let result_2 = similarity_score(&first, &second);
+
+        assert_eq!(result_1, 2970687, "Day 01 - Part 1 failed"); 
+        assert_eq!(result_2, 23963899, "Day 01 - Part 2 failed"); 
+    }
 }

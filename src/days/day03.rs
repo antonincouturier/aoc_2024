@@ -111,4 +111,14 @@ mod tests {
             expected, result
         );
     }
+
+    #[test]
+    fn test_day03_part1_and_part2() {
+        let corrupted_memory = read_input("data/day03.txt").expect("Failed to read test input");
+        let result_1 = compute_multiplications(&corrupted_memory);
+        let result_2 = compute_enabled_multiplications(&corrupted_memory);
+
+        assert_eq!(result_1, 188116424, "Day 03 - Part 1 failed"); 
+        assert_eq!(result_2, 104245808, "Day 03 - Part 2 failed"); 
+    }
 }
