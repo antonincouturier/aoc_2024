@@ -1,17 +1,18 @@
+use rayon::prelude::*;
+use std::error::Error;
 use std::fs;
 use std::path::Path;
-use std::error::Error;
-use rayon::prelude::*;
 
 pub fn run() {
-    let calibration_data = read_input("data/day07.txt").expect("Failed to read and parse the input file");
+    let calibration_data =
+        read_input("data/day07.txt").expect("Failed to read and parse the input file");
     let result_1 = total_calibration(&calibration_data);
     let result_2 = total_calibration_concat(&calibration_data);
     println!("Day 07 - part 1: {}", result_1);
-    println!("Day 07 - part 2: {}", result_2); 
+    println!("Day 07 - part 2: {}", result_2);
 }
 
-pub fn read_input(path: &str) ->  Result<Vec<(usize, Vec<usize>)>, Box<dyn Error>>  {
+pub fn read_input(path: &str) -> Result<Vec<(usize, Vec<usize>)>, Box<dyn Error>> {
     let content = fs::read_to_string(Path::new(path))
         .unwrap_or_else(|_| panic!("Failed to read input file: {}", path));
 
@@ -22,9 +23,17 @@ pub fn read_input(path: &str) ->  Result<Vec<(usize, Vec<usize>)>, Box<dyn Error
             if parts.len() != 2 {
                 return Err(format!("Invalid line {}", line));
             }
-            let key: usize = parts[0].parse().map_err(|e| format!("Failed to parse key '{}': {}", parts[0], e))?;
-            let values: Vec<usize> = parts[1].split_whitespace().map(|val| val.parse().map_err(|e| format!("Failed to parse value '{}': {}", val, e))).collect::<Result<Vec<usize>, String>>()?;
-        Ok((key, values))
+            let key: usize = parts[0]
+                .parse()
+                .map_err(|e| format!("Failed to parse key '{}': {}", parts[0], e))?;
+            let values: Vec<usize> = parts[1]
+                .split_whitespace()
+                .map(|val| {
+                    val.parse()
+                        .map_err(|e| format!("Failed to parse value '{}': {}", val, e))
+                })
+                .collect::<Result<Vec<usize>, String>>()?;
+            Ok((key, values))
         })
         .collect::<Result<Vec<(usize, Vec<usize>)>, String>>()?
         .into();
@@ -39,14 +48,19 @@ fn operator_calibration(key: &usize, values: &[usize]) -> bool {
             temp_results.push(result * value);
             temp_results.push(result + value);
         }
-        results = temp_results.into_iter().filter(|&value| value <= *key).collect();
+        results = temp_results
+            .into_iter()
+            .filter(|&value| value <= *key)
+            .collect();
     }
     results.contains(key)
 }
 
 fn concatenate_integers(i: usize, j: usize) -> usize {
     let concatenated = format!("{}{}", i, j);
-    concatenated.parse().expect("Failed to parse string to usize")
+    concatenated
+        .parse()
+        .expect("Failed to parse string to usize")
 }
 
 fn operator_calibration_concat(key: &usize, values: &[usize]) -> bool {
@@ -58,11 +72,13 @@ fn operator_calibration_concat(key: &usize, values: &[usize]) -> bool {
             temp_results.push(result + value);
             temp_results.push(concatenate_integers(result, value));
         }
-        results = temp_results.into_iter().filter(|&value| value <= *key).collect();
+        results = temp_results
+            .into_iter()
+            .filter(|&value| value <= *key)
+            .collect();
     }
     results.contains(key)
 }
-
 
 pub fn total_calibration(calibration_data: &[(usize, Vec<usize>)]) -> usize {
     calibration_data
@@ -134,15 +150,15 @@ mod tests {
     #[test]
     fn test_total_calibration() {
         let mut input = Vec::new();
-        input.push((190, vec![10, 19]));      
-        input.push((3267, vec![81, 40, 27])); 
-        input.push((83, vec![17, 5]));        
-        input.push((156, vec![15, 6]));       
-        input.push((7290, vec![6, 8, 6, 15])); 
-        input.push((161011, vec![16, 10, 13])); 
-        input.push((192, vec![17, 8, 14]));     
+        input.push((190, vec![10, 19]));
+        input.push((3267, vec![81, 40, 27]));
+        input.push((83, vec![17, 5]));
+        input.push((156, vec![15, 6]));
+        input.push((7290, vec![6, 8, 6, 15]));
+        input.push((161011, vec![16, 10, 13]));
+        input.push((192, vec![17, 8, 14]));
         input.push((21037, vec![9, 7, 18, 13]));
-        input.push((292, vec![11, 6, 16, 20]));  
+        input.push((292, vec![11, 6, 16, 20]));
 
         let expected_sum = 3749;
         let result = total_calibration(&input);
@@ -152,4 +168,4 @@ mod tests {
             expected_sum, result
         );
     }
- }
+}

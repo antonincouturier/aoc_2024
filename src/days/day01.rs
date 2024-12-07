@@ -1,10 +1,11 @@
-use std::fs;
-use std::path::Path;
 use std::collections::HashMap;
 use std::error::Error;
+use std::fs;
+use std::path::Path;
 
 pub fn run() {
-    let (first, second) = read_input("data/day01.txt").expect("Failed to read and parse the input file");
+    let (first, second) =
+        read_input("data/day01.txt").expect("Failed to read and parse the input file");
     let result_1 = sorted_difference(&first, &second);
     let result_2 = similarity_score(&first, &second);
     println!("Day 01 - part 1: {}", result_1);
@@ -20,12 +21,10 @@ pub fn read_input(path: &str) -> Result<(Vec<i32>, Vec<i32>), Box<dyn Error>> {
         .filter_map(|line| {
             let mut parts = line.split_whitespace();
             match (parts.next(), parts.next(), parts.next()) {
-                (Some(a), Some(b), None) => {
-                    match (a.parse::<i32>(), b.parse::<i32>()) {
-                        (Ok(n1), Ok(n2)) => Some((n1, n2)),
-                        _ => None, 
-                    }
-                }
+                (Some(a), Some(b), None) => match (a.parse::<i32>(), b.parse::<i32>()) {
+                    (Ok(n1), Ok(n2)) => Some((n1, n2)),
+                    _ => None,
+                },
                 _ => None,
             }
         })
@@ -44,9 +43,10 @@ pub fn sorted_difference(first: &[i32], second: &[i32]) -> i32 {
     first_sorted.sort();
     second_sorted.sort();
 
-    first_sorted.iter()
+    first_sorted
+        .iter()
         .zip(second_sorted.iter())
-        .map(|(x, y)| (x-y).abs())
+        .map(|(x, y)| (x - y).abs())
         .sum()
 }
 
@@ -57,7 +57,8 @@ pub fn similarity_score(first: &[i32], second: &[i32]) -> i32 {
         *count += 1;
     }
 
-    first.iter()
+    first
+        .iter()
         .map(|&x| x * counter.get(&x).unwrap_or(&0))
         .sum()
 }

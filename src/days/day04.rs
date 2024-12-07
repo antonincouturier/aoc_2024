@@ -1,32 +1,25 @@
+use regex::Regex;
+use std::cmp::{max, min};
+use std::error::Error;
 use std::fs;
 use std::path::Path;
-use regex::Regex;
-use std::cmp::{min, max};
-use std::error::Error;
 
 pub fn run() {
     let puzzle = read_input("data/day04.txt").expect("Failed to read and parse the input file");
     let result_1 = count_all_xmas(&puzzle);
     let result_2 = count_all_x_mas(&puzzle);
     println!("Day 04 - part 1: {}", result_1);
-    println!("Day 04 - part 2: {}", result_2); 
+    println!("Day 04 - part 2: {}", result_2);
 }
 
 pub fn read_input(path: &str) -> Result<Vec<Vec<char>>, Box<dyn Error>> {
     let content = fs::read_to_string(Path::new(path))
         .map_err(|e| format!("Failed to read input file '{}': {}", path, e))?;
 
-    Ok(
-        content
+    Ok(content
         .lines()
-        .map(|line| {
-            line
-                .chars()
-                .collect::<Vec<char>>()
-            
-        })
-        .collect()
-    )
+        .map(|line| line.chars().collect::<Vec<char>>())
+        .collect())
 }
 
 fn count_xmas_samx(input: &str) -> usize {
@@ -39,7 +32,7 @@ pub fn count_all_xmas(puzzle: &[Vec<char>]) -> usize {
     let n_rows = puzzle.len();
     let n_cols = puzzle[0].len();
 
-    // Horizontal 
+    // Horizontal
     let horizontal_count: usize = puzzle
         .iter()
         .map(|row| {
@@ -48,7 +41,7 @@ pub fn count_all_xmas(puzzle: &[Vec<char>]) -> usize {
         })
         .sum();
 
-    // Vertical 
+    // Vertical
     let vertical_count: usize = (0..n_cols)
         .map(|col| {
             let col_str = (0..n_rows).map(|row| puzzle[row][col]).collect::<String>();
@@ -56,10 +49,10 @@ pub fn count_all_xmas(puzzle: &[Vec<char>]) -> usize {
         })
         .sum();
 
-    // Diagonals top left 
+    // Diagonals top left
     let diagonal_tl_count: usize = (3..(n_rows + n_cols - 1)) // at least 4 characters
         .filter_map(|start| {
-            let diagonal: String = (0..=start) 
+            let diagonal: String = (0..=start)
                 .filter_map(|i| {
                     let x = i;
                     let y = start - i;
@@ -81,7 +74,8 @@ pub fn count_all_xmas(puzzle: &[Vec<char>]) -> usize {
     // Diagonals top right
     let diagonal_tr_count: usize = (3..(n_rows + n_cols - 1)) // at least 4 characters
         .filter_map(|start| {
-            let diagonal: String = (max(0, start as isize - (n_cols as isize - 1)) as usize..=min(start, n_rows - 1)) 
+            let diagonal: String = (max(0, start as isize - (n_cols as isize - 1)) as usize
+                ..=min(start, n_rows - 1))
                 .filter_map(|i| {
                     let x = i;
                     let y = n_cols - 1 - (start - i);
@@ -107,9 +101,9 @@ pub fn count_all_x_mas(puzzle: &[Vec<char>]) -> usize {
     let n_rows = puzzle.len();
     let n_cols = puzzle[0].len();
     let mut count = 0;
-    for i in 1..n_rows - 1 { 
+    for i in 1..n_rows - 1 {
         for j in 1..n_cols - 1 {
-            // Only consider case where we find an A 
+            // Only consider case where we find an A
             if puzzle[i][j] != 'A' {
                 continue;
             }
@@ -119,15 +113,15 @@ pub fn count_all_x_mas(puzzle: &[Vec<char>]) -> usize {
             let diag_tr = vec![puzzle[i - 1][j + 1], puzzle[i][j], puzzle[i + 1][j - 1]];
             let diag_tl_str = diag_tl.iter().collect::<String>();
             let diag_tr_str = diag_tr.iter().collect::<String>();
-            if (diag_tl_str == "MAS" || diag_tl_str == "SAM") && (diag_tr_str == "MAS" || diag_tr_str == "SAM") {
+            if (diag_tl_str == "MAS" || diag_tl_str == "SAM")
+                && (diag_tr_str == "MAS" || diag_tr_str == "SAM")
+            {
                 count += 1;
             }
         }
     }
     count
 }
-
-
 
 #[cfg(test)]
 mod tests {
@@ -138,7 +132,11 @@ mod tests {
         let input = "XMASAMX.MM";
         let expected = 2;
         let result = count_xmas_samx(&input);
-        assert_eq!(result, expected, "Failed count xmas samx, expected {:?} got {:?}", expected, result);
+        assert_eq!(
+            result, expected,
+            "Failed count xmas samx, expected {:?} got {:?}",
+            expected, result
+        );
     }
 
     #[test]
@@ -157,7 +155,11 @@ mod tests {
         ];
         let expected = 18;
         let result = count_all_xmas(&input);
-        assert_eq!(result, expected, "Failed count all xmas, expected {:?} got {:?}", expected, result);
+        assert_eq!(
+            result, expected,
+            "Failed count all xmas, expected {:?} got {:?}",
+            expected, result
+        );
     }
 
     #[test]
@@ -176,6 +178,10 @@ mod tests {
         ];
         let expected = 9;
         let result = count_all_x_mas(&input);
-        assert_eq!(result, expected, "Failed count all xmas, expected {:?} got {:?}", expected, result);
+        assert_eq!(
+            result, expected,
+            "Failed count all xmas, expected {:?} got {:?}",
+            expected, result
+        );
     }
 }

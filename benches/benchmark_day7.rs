@@ -1,5 +1,5 @@
+use aoc_2024::days::day07::{read_input, total_calibration, total_calibration_concat};
 use criterion::{black_box, criterion_group, criterion_main, Criterion};
-use aoc_2024::days::day07::{read_input,total_calibration,total_calibration_concat};
 
 fn benchmark_day07(c: &mut Criterion) {
     let calibration_data = read_input("data/day07.txt").expect("Failed to read input");
@@ -15,4 +15,3 @@ fn benchmark_day07(c: &mut Criterion) {
 
 criterion_group!(benches, benchmark_day07);
 criterion_main!(benches);
-

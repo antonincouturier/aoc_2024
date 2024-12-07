@@ -1,5 +1,5 @@
+use aoc_2024::days::day04::{count_all_x_mas, count_all_xmas, read_input};
 use criterion::{black_box, criterion_group, criterion_main, Criterion};
-use aoc_2024::days::day04::{read_input, count_all_xmas, count_all_x_mas};
 
 fn benchmark_day04(c: &mut Criterion) {
     let puzzle = read_input("data/day04.txt").expect("Failed to read and parse the input file");

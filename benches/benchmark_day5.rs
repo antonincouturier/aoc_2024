@@ -1,5 +1,5 @@
+use aoc_2024::days::day05::{middle_page_sum, read_input, reordered_middle_page_sum};
 use criterion::{black_box, criterion_group, criterion_main, Criterion};
-use aoc_2024::days::day05::{read_input, middle_page_sum, reordered_middle_page_sum};
 
 fn benchmark_day05(c: &mut Criterion) {
     let (rules, updates) = read_input("data/day05.txt").expect("Failed to read input");
@@ -15,4 +15,3 @@ fn benchmark_day05(c: &mut Criterion) {
 
 criterion_group!(benches, benchmark_day05);
 criterion_main!(benches);
-

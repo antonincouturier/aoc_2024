@@ -1,34 +1,32 @@
+use std::error::Error;
 use std::fs;
 use std::path::Path;
-use std::error::Error;
 
 pub fn run() {
     let reports = read_input("data/day02.txt").expect("Failed to read and parse the input file");
     let result_1 = count_safe_reports(&reports);
     let result_2 = count_safe_reports_dampener(&reports);
     println!("Day 02 - part 1: {}", result_1);
-    println!("Day 02 - part 2: {}", result_2); 
+    println!("Day 02 - part 2: {}", result_2);
 }
 
 pub fn read_input(path: &str) -> Result<Vec<Vec<i32>>, Box<dyn Error>> {
     let content = fs::read_to_string(Path::new(path))
         .map_err(|e| format!("Failed to read input file '{}': {}", path, e))?;
 
-    Ok(
-        content
+    Ok(content
         .lines()
         .map(|line| {
             line.split_whitespace()
                 .filter_map(|num| num.parse::<i32>().ok())
                 .collect::<Vec<i32>>()
         })
-        .collect()
-    )
+        .collect())
 }
 
 fn is_difference_safe(difference: &i32) -> bool {
     if *difference == 0 {
-        return false; 
+        return false;
     }
     const SAFE_THRESHOLD: i32 = 4;
     if difference.abs() < SAFE_THRESHOLD {
@@ -52,7 +50,8 @@ fn is_report_safe(report: &[i32]) -> bool {
 }
 
 pub fn count_safe_reports(reports: &[Vec<i32>]) -> i32 {
-    reports.iter()
+    reports
+        .iter()
         .filter(|report| is_report_safe(report))
         .count()
         .try_into()
@@ -94,7 +93,11 @@ mod tests {
         let expected = vec![true, false, false, false, false, true];
         for (list, expected_return) in lists.iter().zip(expected.iter()) {
             let result = is_report_safe(&list);
-            assert_eq!(result, *expected_return, "Failed is report safe on report {:?}", list);
+            assert_eq!(
+                result, *expected_return,
+                "Failed is report safe on report {:?}",
+                list
+            );
         }
     }
     #[test]
@@ -108,7 +111,11 @@ mod tests {
         let lists = vec![list1, list2, list3, list4, list5, list6];
         let expected = 2;
         let result = count_safe_reports(&lists);
-        assert_eq!(result, expected, "Failed count safe report got {} expected {}", result, expected);
+        assert_eq!(
+            result, expected,
+            "Failed count safe report got {} expected {}",
+            result, expected
+        );
     }
     #[test]
     fn test_count_safe_reports_dampener() {
@@ -121,6 +128,10 @@ mod tests {
         let lists = vec![list1, list2, list3, list4, list5, list6];
         let expected = 4;
         let result = count_safe_reports_dampener(&lists);
-        assert_eq!(result, expected, "Failed count safe report got {} expected {}", result, expected);
+        assert_eq!(
+            result, expected,
+            "Failed count safe report got {} expected {}",
+            result, expected
+        );
     }
 }

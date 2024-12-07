@@ -1,28 +1,22 @@
-use std::fs;
-use std::path::Path;
 use regex::Regex;
 use std::error::Error;
+use std::fs;
+use std::path::Path;
 
 pub fn run() {
-    let corrupted_memory = read_input("data/day03.txt").expect("Failed to read and parse the input file");
+    let corrupted_memory =
+        read_input("data/day03.txt").expect("Failed to read and parse the input file");
     let result_1 = compute_multiplications(&corrupted_memory);
     let result_2 = compute_enabled_multiplications(&corrupted_memory);
     println!("Day 03 - part 1: {}", result_1);
-    println!("Day 03 - part 2: {}", result_2); 
+    println!("Day 03 - part 2: {}", result_2);
 }
 
 pub fn read_input(path: &str) -> Result<Vec<String>, Box<dyn Error>> {
     let content = fs::read_to_string(Path::new(path))
         .map_err(|e| format!("Failed to read input file '{}': {}", path, e))?;
 
-    Ok(
-        content
-        .lines()
-        .map(|line| {
-            line.to_string()
-        })
-        .collect()
-    )
+    Ok(content.lines().map(|line| line.to_string()).collect())
 }
 
 fn find_valid_mul(input: &str) -> Vec<(i32, i32)> {
@@ -39,7 +33,8 @@ fn find_valid_mul(input: &str) -> Vec<(i32, i32)> {
 pub fn compute_multiplications(corrupted_memory: &[String]) -> i32 {
     corrupted_memory
         .iter()
-        .flat_map(|input| { // Note: need to use flat_map instead of map
+        .flat_map(|input| {
+            // Note: need to use flat_map instead of map
             find_valid_mul(input)
                 .iter()
                 .map(|(x, y)| x * y)
@@ -79,24 +74,43 @@ mod tests {
     #[test]
     fn test_find_valid_mul() {
         let input = "xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))";
-        let expected = vec![(2,4), (5,5), (11,8), (8,5)];
+        let expected = vec![(2, 4), (5, 5), (11, 8), (8, 5)];
         let result = find_valid_mul(&input);
-        assert_eq!(result, expected, "Failed find valid mul, expected {:?} got {:?}", expected, result);
+        assert_eq!(
+            result, expected,
+            "Failed find valid mul, expected {:?} got {:?}",
+            expected, result
+        );
     }
 
     #[test]
     fn test_compute_multiplication() {
-        let input = vec!["xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))"].into_iter().map(String::from).collect::<Vec<String>>();
+        let input = vec!["xmul(2,4)%&mul[3,7]!@^do_not_mul(5,5)+mul(32,64]then(mul(11,8)mul(8,5))"]
+            .into_iter()
+            .map(String::from)
+            .collect::<Vec<String>>();
         let expected = 161;
         let result = compute_multiplications(&input);
-        assert_eq!(result, expected, "Failed compute multiplications, expected {:?} got {:?}", expected, result);
+        assert_eq!(
+            result, expected,
+            "Failed compute multiplications, expected {:?} got {:?}",
+            expected, result
+        );
     }
 
     #[test]
     fn test_compute_enabled_multiplications() {
-        let input = vec!["xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))"].into_iter().map(String::from).collect::<Vec<String>>();
-        let expected = 48;   
+        let input =
+            vec!["xmul(2,4)&mul[3,7]!^don't()_mul(5,5)+mul(32,64](mul(11,8)undo()?mul(8,5))"]
+                .into_iter()
+                .map(String::from)
+                .collect::<Vec<String>>();
+        let expected = 48;
         let result = compute_enabled_multiplications(&input);
-        assert_eq!(result, expected, "Failed find do block, expected {:?} got {:?}", expected, result);
+        assert_eq!(
+            result, expected,
+            "Failed find do block, expected {:?} got {:?}",
+            expected, result
+        );
     }
 }

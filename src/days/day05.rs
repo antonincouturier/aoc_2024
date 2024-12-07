@@ -1,17 +1,17 @@
+use regex::Regex;
+use std::collections::{HashMap, HashSet, VecDeque};
+use std::error::Error;
 use std::fs;
 use std::path::Path;
-use std::collections::{HashSet, HashMap, VecDeque};
-use regex::Regex;
-use std::error::Error;
 
 pub fn run() {
-    let (rules, updates) = read_input("data/day05.txt").expect("Failed to read and parse the input file");
+    let (rules, updates) =
+        read_input("data/day05.txt").expect("Failed to read and parse the input file");
 
     let result_1 = middle_page_sum(&updates, &rules);
     let result_2 = reordered_middle_page_sum(&updates, &rules);
     println!("Day 05 - part 1: {}", result_1);
-    println!("Day 05 - part 2: {}", result_2); 
-
+    println!("Day 05 - part 2: {}", result_2);
 }
 
 fn extract_rules(input: &str) -> HashMap<u32, Vec<u32>> {
@@ -32,11 +32,8 @@ fn extract_pages(input: &str) -> Vec<Vec<u32>> {
     input
         .lines()
         .map(|line| {
-            line 
-                .split(',')
-                .filter_map(|num_str| {
-                    num_str.trim().parse::<u32>().ok()
-                })
+            line.split(',')
+                .filter_map(|num_str| num_str.trim().parse::<u32>().ok())
                 .collect::<Vec<u32>>()
         })
         .collect::<Vec<Vec<u32>>>()
@@ -48,10 +45,10 @@ pub fn read_input(path: &str) -> Result<(HashMap<u32, Vec<u32>>, Vec<Vec<u32>>),
 
     let blocks = content
         .split("\n\n")
-        .map(|block| {block.trim().to_string()})
+        .map(|block| block.trim().to_string())
         .filter(|block| !block.is_empty())
         .collect::<Vec<String>>();
-    
+
     if blocks.len() != 2 {
         return Err(format!("Expected 2 blocks of input, found {}", blocks.len()).into());
     }
@@ -71,7 +68,7 @@ fn check_update(update: &[u32], rules: &HashMap<u32, Vec<u32>>) -> bool {
                 }
             }
         }
-    current_set.insert(page);
+        current_set.insert(page);
     }
     true
 }
@@ -154,7 +151,6 @@ pub fn reordered_middle_page_sum(updates: &[Vec<u32>], rules: &HashMap<u32, Vec<
         .sum()
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -170,17 +166,21 @@ mod tests {
         rules.insert(29, vec![13]);
 
         let updates = vec![
-            vec![75, 47, 61, 53, 29],          
-            vec![97, 61, 53, 29, 13],          
-            vec![75, 29, 13],                  
-            vec![75, 97, 47, 61, 53],         
-            vec![61, 13, 29],                  
-            vec![97, 13, 75, 29, 47],        
+            vec![75, 47, 61, 53, 29],
+            vec![97, 61, 53, 29, 13],
+            vec![75, 29, 13],
+            vec![75, 97, 47, 61, 53],
+            vec![61, 13, 29],
+            vec![97, 13, 75, 29, 47],
         ];
         let expected_results = vec![true, true, true, false, false, false];
         for (update, expected_result) in updates.iter().zip(expected_results.iter()) {
             let result = check_update(&update, &rules);
-            assert_eq!(result, *expected_result, "Check update failed for {:?}, expected {}, got {} (rules: {:?})", update, expected_result, result, rules);
+            assert_eq!(
+                result, *expected_result,
+                "Check update failed for {:?}, expected {}, got {} (rules: {:?})",
+                update, expected_result, result, rules
+            );
         }
     }
 
@@ -195,16 +195,20 @@ mod tests {
         rules.insert(29, vec![13]);
 
         let updates = vec![
-            vec![75, 47, 61, 53, 29],          
-            vec![97, 61, 53, 29, 13],          
-            vec![75, 29, 13],                  
-            vec![75, 97, 47, 61, 53],         
-            vec![61, 13, 29],                  
-            vec![97, 13, 75, 29, 47],        
+            vec![75, 47, 61, 53, 29],
+            vec![97, 61, 53, 29, 13],
+            vec![75, 29, 13],
+            vec![75, 97, 47, 61, 53],
+            vec![61, 13, 29],
+            vec![97, 13, 75, 29, 47],
         ];
         let expected_result = 143;
         let result = middle_page_sum(&updates, &rules);
-        assert_eq!(result, expected_result, "Test middle page sum failes, expected {}, got {}", expected_result, result);
+        assert_eq!(
+            result, expected_result,
+            "Test middle page sum failes, expected {}, got {}",
+            expected_result, result
+        );
     }
 
     #[test]
@@ -218,22 +222,26 @@ mod tests {
         rules.insert(29, vec![13]);
 
         let updates = vec![
-            vec![75, 97, 47, 61, 53],         
-            vec![61, 13, 29],                  
-            vec![97, 13, 75, 29, 47],        
+            vec![75, 97, 47, 61, 53],
+            vec![61, 13, 29],
+            vec![97, 13, 75, 29, 47],
         ];
         let expected_results = vec![
-            vec![97, 75, 47, 61, 53],         
-            vec![61, 29, 13],                  
-            vec![97, 75, 47, 29, 13],        
-        ];        
+            vec![97, 75, 47, 61, 53],
+            vec![61, 29, 13],
+            vec![97, 75, 47, 29, 13],
+        ];
 
         for (update, expected_result) in updates.iter().zip(expected_results.iter()) {
             let result = reorder_update(&update, &rules);
-            assert_eq!(result, *expected_result, "Re-ordering failed for {:?}, expected {:?}, got {:?}", update, expected_result, result);
+            assert_eq!(
+                result, *expected_result,
+                "Re-ordering failed for {:?}, expected {:?}, got {:?}",
+                update, expected_result, result
+            );
         }
     }
-    
+
     #[test]
     fn test_reordered_middle_page_sum() {
         let mut rules = HashMap::new();
@@ -245,15 +253,19 @@ mod tests {
         rules.insert(29, vec![13]);
 
         let updates = vec![
-            vec![75, 47, 61, 53, 29],          
-            vec![97, 61, 53, 29, 13],          
-            vec![75, 29, 13],                  
-            vec![75, 97, 47, 61, 53],         
-            vec![61, 13, 29],                  
-            vec![97, 13, 75, 29, 47],        
+            vec![75, 47, 61, 53, 29],
+            vec![97, 61, 53, 29, 13],
+            vec![75, 29, 13],
+            vec![75, 97, 47, 61, 53],
+            vec![61, 13, 29],
+            vec![97, 13, 75, 29, 47],
         ];
         let expected_result = 123;
         let result = reordered_middle_page_sum(&updates, &rules);
-        assert_eq!(result, expected_result, "Test middle page sum failes, expected {}, got {}", expected_result, result);
+        assert_eq!(
+            result, expected_result,
+            "Test middle page sum failes, expected {}, got {}",
+            expected_result, result
+        );
     }
 }
