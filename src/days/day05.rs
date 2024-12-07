@@ -4,6 +4,9 @@ use std::error::Error;
 use std::fs;
 use std::path::Path;
 
+type Rules = HashMap<u32, Vec<u32>>;
+type Pages = Vec<Vec<u32>>;
+
 pub fn run() {
     let (rules, updates) =
         read_input("data/day05.txt").expect("Failed to read and parse the input file");
@@ -14,11 +17,11 @@ pub fn run() {
     println!("Day 05 - part 2: {}", result_2);
 }
 
-fn extract_rules(input: &str) -> HashMap<u32, Vec<u32>> {
-    let mut map: HashMap<u32, Vec<u32>> = HashMap::new();
+fn extract_rules(input: &str) -> Rules {
+    let mut map: Rules = HashMap::new();
     let re = Regex::new(r"^(\d+)\|(\d+)$").unwrap();
     for line in input.lines() {
-        if let Some(caps) = re.captures(&line) {
+        if let Some(caps) = re.captures(line) {
             let key: u32 = caps[1].parse().unwrap();
             let value: u32 = caps[2].parse().unwrap();
 
@@ -28,7 +31,7 @@ fn extract_rules(input: &str) -> HashMap<u32, Vec<u32>> {
     map
 }
 
-fn extract_pages(input: &str) -> Vec<Vec<u32>> {
+fn extract_pages(input: &str) -> Pages {
     input
         .lines()
         .map(|line| {
@@ -36,10 +39,10 @@ fn extract_pages(input: &str) -> Vec<Vec<u32>> {
                 .filter_map(|num_str| num_str.trim().parse::<u32>().ok())
                 .collect::<Vec<u32>>()
         })
-        .collect::<Vec<Vec<u32>>>()
+        .collect::<Pages>()
 }
 
-pub fn read_input(path: &str) -> Result<(HashMap<u32, Vec<u32>>, Vec<Vec<u32>>), Box<dyn Error>> {
+pub fn read_input(path: &str) -> Result<(Rules, Pages), Box<dyn Error>> {
     let content = fs::read_to_string(Path::new(path))
         .map_err(|e| format!("Failed to read input file '{}': {}", path, e))?;
 
@@ -58,7 +61,7 @@ pub fn read_input(path: &str) -> Result<(HashMap<u32, Vec<u32>>, Vec<Vec<u32>>),
     Ok((rules, pages))
 }
 
-fn check_update(update: &[u32], rules: &HashMap<u32, Vec<u32>>) -> bool {
+fn check_update(update: &[u32], rules: &Rules) -> bool {
     let mut current_set = HashSet::new();
     for &page in update.iter() {
         if let Some(rule) = rules.get(&page) {
@@ -73,7 +76,7 @@ fn check_update(update: &[u32], rules: &HashMap<u32, Vec<u32>>) -> bool {
     true
 }
 
-pub fn middle_page_sum(updates: &[Vec<u32>], rules: &HashMap<u32, Vec<u32>>) -> u32 {
+pub fn middle_page_sum(updates: &[Vec<u32>], rules: &Rules) -> u32 {
     updates
         .iter()
         .filter(|update| check_update(update, rules))
@@ -84,7 +87,7 @@ pub fn middle_page_sum(updates: &[Vec<u32>], rules: &HashMap<u32, Vec<u32>>) -> 
         .sum()
 }
 
-fn reorder_update(update: &[u32], rules: &HashMap<u32, Vec<u32>>) -> Vec<u32> {
+fn reorder_update(update: &[u32], rules: &Rules) -> Vec<u32> {
     let unique_pages: HashSet<u32> = update.iter().cloned().collect();
     let mut adjacency_map: HashMap<u32, Vec<u32>> = HashMap::new();
     let mut degree_count: HashMap<u32, usize> = HashMap::new();
@@ -139,7 +142,7 @@ fn reorder_update(update: &[u32], rules: &HashMap<u32, Vec<u32>>) -> Vec<u32> {
     sorted
 }
 
-pub fn reordered_middle_page_sum(updates: &[Vec<u32>], rules: &HashMap<u32, Vec<u32>>) -> u32 {
+pub fn reordered_middle_page_sum(updates: &[Vec<u32>], rules: &Rules) -> u32 {
     updates
         .iter()
         .filter(|update| !check_update(update, rules))

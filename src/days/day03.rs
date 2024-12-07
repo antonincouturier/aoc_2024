@@ -55,12 +55,10 @@ pub fn compute_enabled_multiplications(corrupted_memory: &[String]) -> i32 {
                 enabled = true;
             } else if matched_str == "don't()" {
                 enabled = false;
-            } else if matched_str.starts_with("mul(") {
-                if enabled {
-                    let x = cap.get(1).unwrap().as_str().parse::<i32>().unwrap();
-                    let y = cap.get(2).unwrap().as_str().parse::<i32>().unwrap();
-                    total += x * y;
-                }
+            } else if matched_str.starts_with("mul(") && enabled {
+                let x = cap.get(1).unwrap().as_str().parse::<i32>().unwrap();
+                let y = cap.get(2).unwrap().as_str().parse::<i32>().unwrap();
+                total += x * y;
             }
         }
     }

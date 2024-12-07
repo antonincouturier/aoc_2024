@@ -3,6 +3,8 @@ use std::error::Error;
 use std::fs;
 use std::path::Path;
 
+type Calibration = Vec<(usize, Vec<usize>)>;
+
 pub fn run() {
     let calibration_data =
         read_input("data/day07.txt").expect("Failed to read and parse the input file");
@@ -12,7 +14,7 @@ pub fn run() {
     println!("Day 07 - part 2: {}", result_2);
 }
 
-pub fn read_input(path: &str) -> Result<Vec<(usize, Vec<usize>)>, Box<dyn Error>> {
+pub fn read_input(path: &str) -> Result<Calibration, Box<dyn Error>> {
     let content = fs::read_to_string(Path::new(path))
         .unwrap_or_else(|_| panic!("Failed to read input file: {}", path));
 
@@ -35,8 +37,7 @@ pub fn read_input(path: &str) -> Result<Vec<(usize, Vec<usize>)>, Box<dyn Error>
                 .collect::<Result<Vec<usize>, String>>()?;
             Ok((key, values))
         })
-        .collect::<Result<Vec<(usize, Vec<usize>)>, String>>()?
-        .into();
+        .collect::<Result<Vec<(usize, Vec<usize>)>, String>>()?;
     Ok(calibration_data)
 }
 

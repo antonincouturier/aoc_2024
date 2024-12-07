@@ -109,8 +109,8 @@ pub fn count_all_x_mas(puzzle: &[Vec<char>]) -> usize {
             }
 
             // Build the diagonals
-            let diag_tl = vec![puzzle[i - 1][j - 1], puzzle[i][j], puzzle[i + 1][j + 1]];
-            let diag_tr = vec![puzzle[i - 1][j + 1], puzzle[i][j], puzzle[i + 1][j - 1]];
+            let diag_tl = [puzzle[i - 1][j - 1], puzzle[i][j], puzzle[i + 1][j + 1]];
+            let diag_tr = [puzzle[i - 1][j + 1], puzzle[i][j], puzzle[i + 1][j - 1]];
             let diag_tl_str = diag_tl.iter().collect::<String>();
             let diag_tr_str = diag_tr.iter().collect::<String>();
             if (diag_tl_str == "MAS" || diag_tl_str == "SAM")

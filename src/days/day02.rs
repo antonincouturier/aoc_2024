@@ -61,7 +61,7 @@ pub fn count_safe_reports(reports: &[Vec<i32>]) -> i32 {
 pub fn count_safe_reports_dampener(reports: &[Vec<i32>]) -> i32 {
     let mut count = 0;
     for report in reports {
-        if is_report_safe(&report) {
+        if is_report_safe(report) {
             count += 1;
         } else {
             for i in 0..report.len() {

@@ -139,16 +139,9 @@ pub fn guard_patrol_count(start: &Position, map: &Map) -> usize {
     let mut current_position = start.clone();
     let mut unique_positions = HashSet::new();
 
-    loop {
-        match next_move(&current_position, map) {
-            Some(next_pos) => {
-                unique_positions.insert((current_position.i, current_position.j));
-                current_position = next_pos;
-            }
-            None => {
-                break;
-            }
-        }
+    while let Some(next_pos) = next_move(&current_position, map) {
+        unique_positions.insert((current_position.i, current_position.j));
+        current_position = next_pos;
     }
     unique_positions.len()
 }
@@ -178,7 +171,7 @@ pub fn find_all_loops_parallel(start: &Position, map: &Map) -> usize {
 
     all_positions
         .par_iter()
-        .filter(|&&(i, j)| !map.obstacles.contains(&(i, j)) && !(start.i == i && start.j == j))
+        .filter(|&&(i, j)| !map.obstacles.contains(&(i, j)) || (start.i == i && start.j == j))
         .filter(|&&(i, j)| {
             let mut new_obstacles = map.obstacles.clone();
             new_obstacles.insert((i, j));
